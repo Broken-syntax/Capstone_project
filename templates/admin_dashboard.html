@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Water Station Dashboard</title>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+body {
+    font-family: 'Segoe UI', sans-serif;
+    margin: 0;
+    background: #eef7fb;
+}
+
+/* HEADER */
+header {
+    background: linear-gradient(90deg, #00c6ff, #0072ff);
+    color: white;
+    padding: 15px;
+    text-align: center;
+}
+
+/* LAYOUT */
+.container {
+    display: flex;
+}
+
+/* SIDEBAR */
+.sidebar {
+    width: 230px;
+    background: #003f5c;
+    color: white;
+    height: 100vh;
+    padding: 20px;
+}
+
+.sidebar h3 {
+    margin-bottom: 20px;
+}
+
+.sidebar p {
+    padding: 10px;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.sidebar p:hover {
+    background: rgba(255,255,255,0.2);
+}
+
+/* MAIN */
+.main {
+    flex: 1;
+    padding: 20px;
+}
+
+/* CARD STYLE */
+.card {
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+/* FORM */
+input {
+    width: 100%;
+    padding: 10px;
+    margin: 6px 0;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+}
+
+button {
+    background: #00bcd4;
+    color: white;
+    padding: 12px;
+    border: none;
+    width: 100%;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+button:hover {
+    background: #0097a7;
+}
+
+/* TABLE */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+th {
+    background: #0072ff;
+    color: white;
+}
+
+th, td {
+    padding: 12px;
+    text-align: center;
+}
+
+tr:nth-child(even) {
+    background: #f2f9ff;
+}
+
+tr:hover {
+    background: #d9f1ff;
+}
+
+/* CHART */
+.chart-container {
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <h2>💧 AquaPure Water Station Dashboard</h2>
+</header>
+
+<div class="container">
+
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+        <h3>Menu</h3>
+        <p>🏠 Dashboard</p>
+        <p>🚚 Assignments</p>
+        <p>📜 History</p>
+    </div>
+
+    <!-- MAIN -->
+    <div class="main">
+
+        <!-- FORM -->
+        <div class="card">
+            <h3>🚚 Assign Delivery Vehicle</h3>
+
+            <input type="text" id="name" placeholder="Customer Name">
+            <input type="text" id="vehicle" placeholder="Vehicle">
+            <input type="text" id="driver" placeholder="Driver">
+            <input type="number" id="startOdo" placeholder="Start Odometer">
+            <input type="number" id="endOdo" placeholder="End Odometer">
+            <input type="number" id="fuel" placeholder="Fuel Used (Liters)">
+            <input type="number" id="price" placeholder="Fuel Price per Liter">
+
+            <button onclick="addData()">Submit</button>
+        </div>
+
+        <!-- TABLE -->
+        <div class="card">
+            <h3>📊 Delivery Records</h3>
+
+            <table id="dataTable">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Vehicle</th>
+                        <th>Driver</th>
+                        <th>Distance</th>
+                        <th>Fuel Cost</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+
+        <!-- CHART -->
+        <div class="chart-container">
+            <h3>⛽ Fuel Cost Overview</h3>
+            <canvas id="myChart"></canvas>
+        </div>
+
+    </div>
+</div>
+
+<script>
+let labels = [];
+let fuelCosts = [];
+
+const ctx = document.getElementById('myChart').getContext('2d');
+
+const myChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+        labels: labels,
+        datasets: [{
+            label: 'Fuel Cost (₱)',
+            data: fuelCosts,
+            backgroundColor: '#00bcd4'
+        }]
+    },
+    options: {
+        responsive: true,
+        plugins: {
+            legend: { display: false }
+        }
+    }
+});
+
+function addData() {
+    let name = document.getElementById("name").value;
+    let vehicle = document.getElementById("vehicle").value;
+    let driver = document.getElementById("driver").value;
+    let start = parseFloat(document.getElementById("startOdo").value);
+    let end = parseFloat(document.getElementById("endOdo").value);
+    let fuel = parseFloat(document.getElementById("fuel").value);
+    let price = parseFloat(document.getElementById("price").value);
+
+    if (!name || !vehicle || !driver || isNaN(start) || isNaN(end)) {
+        alert("Please fill all fields correctly!");
+        return;
+    }
+
+    let distance = end - start;
+    let totalCost = fuel * price;
+
+    let table = document.getElementById("dataTable").getElementsByTagName('tbody')[0];
+    let row = table.insertRow();
+
+    row.insertCell(0).innerHTML = name;
+    row.insertCell(1).innerHTML = vehicle;
+    row.insertCell(2).innerHTML = driver;
+    row.insertCell(3).innerHTML = distance + " km";
+    row.insertCell(4).innerHTML = "₱" + totalCost.toFixed(2);
+
+    labels.push(name);
+    fuelCosts.push(totalCost);
+    myChart.update();
+
+    document.querySelectorAll("input").forEach(input => input.value = "");
+}
+</script>
+
+</body>
+</html>

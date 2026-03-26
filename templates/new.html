@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Trip & Fuel Management सिस्टम</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background: #f4f6f9;
+        text-align: center;
+    }
+    .container {
+        width: 500px;
+        margin: auto;
+    }
+    .box {
+        background: #fff;
+        padding: 15px;
+        margin: 10px 0;
+        border-radius: 8px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    button {
+        padding: 8px 15px;
+        margin-top: 10px;
+        border: none;
+        background: #1976d2;
+        color: white;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+    input {
+        padding: 5px;
+        margin: 5px;
+        width: 80%;
+    }
+    .hidden {
+        display: none;
+    }
+    .result {
+        background: #e8f5e9;
+    }
+</style>
+</head>
+<body>
+
+<h2>🚗 Trip & Fuel Management System</h2>
+
+<div class="container">
+
+    <!-- Login -->
+    <div class="box" id="loginBox">
+        <h3>🔐 Admin Login</h3>
+        <button onclick="login()">Login</button>
+    </div>
+
+    <!-- Setup -->
+    <div class="box hidden" id="setupBox">
+        <h3>⚙️ Setup</h3>
+        <button onclick="nextStep('tripBox')">Proceed to Create Trip</button>
+    </div>
+
+    <!-- Trip -->
+    <div class="box hidden" id="tripBox">
+        <h3>📝 Create Trip</h3>
+        <button onclick="nextStep('assignBox')">Assign Vehicle & Driver</button>
+    </div>
+
+    <!-- Assign -->
+    <div class="box hidden" id="assignBox">
+        <h3>🚚 Assign Vehicle + Driver</h3>
+        <button onclick="nextStep('startBox')">Start Trip</button>
+    </div>
+
+    <!-- Start Trip -->
+    <div class="box hidden" id="startBox">
+        <h3>▶️ Start Trip</h3>
+        <input type="number" id="startOdo" placeholder="Start Odometer">
+        <br>
+        <button onclick="startTrip()">Start</button>
+    </div>
+
+    <!-- End Trip -->
+    <div class="box hidden" id="endBox">
+        <h3>⏹️ End Trip</h3>
+        <input type="number" id="endOdo" placeholder="End Odometer"><br>
+        <input type="number" id="fuelUsed" placeholder="Fuel Used (L)"><br>
+        <input type="number" id="fuelPrice" placeholder="Fuel Price per Liter"><br>
+        <button onclick="endTrip()">End Trip</button>
+    </div>
+
+    <!-- Results -->
+    <div class="box hidden result" id="resultBox">
+        <h3>📊 Results</h3>
+        <p id="distance"></p>
+        <p id="efficiency"></p>
+        <p id="cost"></p>
+        <button onclick="showDashboard()">View Dashboard</button>
+    </div>
+
+    <!-- Dashboard -->
+    <div class="box hidden" id="dashboardBox">
+        <h3>📈 Dashboard</h3>
+        <p id="totalTrips"></p>
+        <p id="totalFuel"></p>
+        <p id="avgEfficiency"></p>
+        <p id="totalCost"></p>
+    </div>
+
+</div>
+
+<script>
+    let startOdo = 0;
+    let totalTrips = 0;
+    let totalFuel = 0;
+    let totalDistance = 0;
+    let totalCost = 0;
+
+    function login() {
+        document.getElementById("loginBox").classList.add("hidden");
+        document.getElementById("setupBox").classList.remove("hidden");
+    }
+
+    function nextStep(nextId) {
+        event.target.parentElement.classList.add("hidden");
+        document.getElementById(nextId).classList.remove("hidden");
+    }
+
+    function startTrip() {
+        startOdo = parseFloat(document.getElementById("startOdo").value);
+        if (!startOdo) return alert("Enter start odometer");
+
+        document.getElementById("startBox").classList.add("hidden");
+        document.getElementById("endBox").classList.remove("hidden");
+    }
+
+    function endTrip() {
+        let endOdo = parseFloat(document.getElementById("endOdo").value);
+        let fuelUsed = parseFloat(document.getElementById("fuelUsed").value);
+        let fuelPrice = parseFloat(document.getElementById("fuelPrice").value);
+
+        if (!endOdo || !fuelUsed || !fuelPrice) {
+            alert("Fill all fields");
+            return;
+        }
+
+        let distance = endOdo - startOdo;
+        let efficiency = distance / fuelUsed;
+        let cost = fuelUsed * fuelPrice;
+
+        // Update totals
+        totalTrips++;
+        totalFuel += fuelUsed;
+        totalDistance += distance;
+        totalCost += cost;
+
+        document.getElementById("distance").innerText = "Distance: " + distance + " km";
+        document.getElementById("efficiency").innerText = "Efficiency: " + efficiency.toFixed(2) + " km/L";
+        document.getElementById("cost").innerText = "Fuel Cost: ₱" + cost.toFixed(2);
+
+        document.getElementById("endBox").classList.add("hidden");
+        document.getElementById("resultBox").classList.remove("hidden");
+    }
+
+    function showDashboard() {
+        let avgEfficiency = totalDistance / totalFuel;
+
+        document.getElementById("totalTrips").innerText = "Total Trips: " + totalTrips;
+        document.getElementById("totalFuel").innerText = "Total Fuel Used: " + totalFuel + " L";
+        document.getElementById("avgEfficiency").innerText = "Avg Efficiency: " + avgEfficiency.toFixed(2) + " km/L";
+        document.getElementById("totalCost").innerText = "Total Cost: ₱" + totalCost.toFixed(2);
+
+        document.getElementById("resultBox").classList.add("hidden");
+        document.getElementById("dashboardBox").classList.remove("hidden");
+    }
+</script>
+
+</body>
+</html>

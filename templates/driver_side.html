@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Driver Input</title>
+
+<style>
+body {
+    font-family: 'Segoe UI', sans-serif;
+    margin: 0;
+    background: linear-gradient(to bottom, #00c6ff, #0072ff);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+/* CARD */
+.container {
+    background: white;
+    padding: 25px;
+    border-radius: 12px;
+    width: 320px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+h2 {
+    text-align: center;
+    color: #0072ff;
+}
+
+input {
+    width: 100%;
+    padding: 10px;
+    margin: 8px 0;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+}
+
+button {
+    width: 100%;
+    padding: 12px;
+    background: #00bcd4;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #0097a7;
+}
+
+/* RESULT BOX */
+.result {
+    margin-top: 15px;
+    padding: 10px;
+    background: #e0f7fa;
+    border-radius: 6px;
+    text-align: center;
+    display: none;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+    <h2>🚚 Driver Trip Input</h2>
+
+    <input type="number" id="startOdo" placeholder="Start Odometer">
+    <input type="number" id="endOdo" placeholder="End Odometer">
+    <input type="number" id="fuel" placeholder="Fuel Used (Liters)">
+    <input type="number" id="price" placeholder="Fuel Price per Liter">
+
+    <button onclick="submitData()">Submit</button>
+
+    <div class="result" id="resultBox"></div>
+</div>
+
+<script>
+function submitData() {
+    let start = parseFloat(document.getElementById("startOdo").value);
+    let end = parseFloat(document.getElementById("endOdo").value);
+    let fuel = parseFloat(document.getElementById("fuel").value);
+    let price = parseFloat(document.getElementById("price").value);
+
+    if (isNaN(start) || isNaN(end) || isNaN(fuel) || isNaN(price)) {
+        alert("Please fill all fields!");
+        return;
+    }
+
+    if (end < start) {
+        alert("End odometer must be higher than start!");
+        return;
+    }
+
+    let distance = end - start;
+    let totalCost = fuel * price;
+
+    let resultBox = document.getElementById("resultBox");
+    resultBox.style.display = "block";
+    resultBox.innerHTML = `
+        Distance: <b>${distance} km</b><br>
+        Fuel Cost: <b>₱${totalCost.toFixed(2)}</b>
+    `;
+
+    // CLEAR INPUTS (optional)
+    document.querySelectorAll("input").forEach(input => input.value = "");
+}
+</script>
+
+</body>
+</html>

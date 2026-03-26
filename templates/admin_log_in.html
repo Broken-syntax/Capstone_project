@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Water Station Admin</title>
+
+<style>
+body {
+    margin: 0;
+    font-family: 'Segoe UI', sans-serif;
+    height: 100vh;
+    background: linear-gradient(to bottom, #00c6ff, #0072ff);
+    overflow: hidden;
+}
+
+/* 🌊 Floating bubbles */
+.bubble {
+    position: absolute;
+    bottom: -100px;
+    background: rgba(255,255,255,0.2);
+    border-radius: 50%;
+    animation: rise 10s infinite ease-in;
+}
+
+@keyframes rise {
+    0% { transform: translateY(0); opacity: 0; }
+    50% { opacity: 1; }
+    100% { transform: translateY(-1000px); opacity: 0; }
+}
+
+/* 💎 Glass card */
+.login-container {
+    position: relative;
+    z-index: 2;
+    width: 340px;
+    padding: 30px;
+    border-radius: 15px;
+    backdrop-filter: blur(15px);
+    background: rgba(255,255,255,0.15);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+    color: white;
+    text-align: center;
+    margin: auto;
+    top: 50%;
+    transform: translateY(-50%);
+    animation: fadeIn 0.7s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(-50%); }
+}
+
+h2 {
+    margin-bottom: 10px;
+}
+
+.subtitle {
+    font-size: 14px;
+    margin-bottom: 20px;
+    opacity: 0.8;
+}
+
+input {
+    width: 100%;
+    padding: 12px;
+    margin: 10px 0;
+    border: none;
+    border-radius: 8px;
+    outline: none;
+}
+
+.password-container {
+    position: relative;
+}
+
+.toggle-password {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: #333;
+}
+
+button {
+    width: 100%;
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    background: #00e5ff;
+    color: #003366;
+    font-size: 16px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+button:hover {
+    background: #00bcd4;
+}
+
+.error {
+    color: #ffdddd;
+    display: none;
+    margin-top: 10px;
+}
+
+.success {
+    color: #d4ffd4;
+    display: none;
+    margin-top: 10px;
+}
+
+.loading {
+    display: none;
+    margin-top: 10px;
+}
+
+/* 💧 Generate bubbles */
+</style>
+</head>
+
+<body>
+
+<!-- bubbles -->
+<script>
+for (let i = 0; i < 15; i++) {
+    let bubble = document.createElement("div");
+    bubble.classList.add("bubble");
+    bubble.style.width = bubble.style.height = Math.random() * 40 + 10 + "px";
+    bubble.style.left = Math.random() * 100 + "%";
+    bubble.style.animationDuration = (Math.random() * 5 + 5) + "s";
+    document.body.appendChild(bubble);
+}
+</script>
+
+<div class="login-container">
+    <h2>💧 AquaPure Station</h2>
+    <div class="subtitle">Admin Login Portal</div>
+
+    <form onsubmit="return validateLogin()">
+        <input type="text" id="username" placeholder="Username" required>
+
+        <div class="password-container">
+            <input type="password" id="password" placeholder="Password" required>
+            <span class="toggle-password" onclick="togglePassword()">👁</span>
+        </div>
+
+        <button id="login-btn">Login</button>
+
+        <div class="loading" id="loading">Authenticating...</div>
+        <div class="error" id="error-msg">Invalid login details</div>
+        <div class="success" id="success-msg">Access Granted!</div>
+    </form>
+</div>
+
+<script>
+function togglePassword() {
+    const pass = document.getElementById("password");
+    pass.type = pass.type === "password" ? "text" : "password";
+}
+
+function validateLogin() {
+    const user = document.getElementById("username").value;
+    const pass = document.getElementById("password").value;
+    const error = document.getElementById("error-msg");
+    const success = document.getElementById("success-msg");
+    const loading = document.getElementById("loading");
+    const btn = document.getElementById("login-btn");
+
+    error.style.display = "none";
+    success.style.display = "none";
+
+    loading.style.display = "block";
+    btn.disabled = true;
+
+    setTimeout(() => {
+        loading.style.display = "none";
+        btn.disabled = false;
+
+        if (user === "admin" && pass === "1234") {
+            success.style.display = "block";
+
+            setTimeout(() => {
+                alert("Welcome to AquaPure Dashboard!");
+            }, 800);
+
+        } else {
+            error.style.display = "block";
+        }
+    }, 1500);
+
+    return false;
+}
+</script>
+
+</body>
+</html>
