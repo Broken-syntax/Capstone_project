@@ -1,8 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script src="https://accounts.google.com/gsi/client" async defer></script>
 <title>Water Station Admin</title>
 
 <style>
@@ -85,7 +87,9 @@ input {
 }
 
 button {
-    width: 100%;
+    display: block;
+    width: 250px;          
+    margin: 15px auto;     
     padding: 12px;
     border: none;
     border-radius: 8px;
@@ -116,8 +120,11 @@ button:hover {
     display: none;
     margin-top: 10px;
 }
-
-/* 💧 Generate bubbles */
+#googleSignIn {
+    display: flex;
+    justify-content: center;
+    margin-top: 10px;
+}
 </style>
 </head>
 
@@ -140,18 +147,16 @@ for (let i = 0; i < 15; i++) {
     <div class="subtitle">Admin Login Portal</div>
 
     <form onsubmit="return validateLogin()">
-        <input type="text" id="username" placeholder="Username" required>
 
-        <div class="password-container">
-            <input type="password" id="password" placeholder="Password" required>
-            <span class="toggle-password" onclick="togglePassword()">👁</span>
-        </div>
 
-        <button id="login-btn">Login</button>
 
         <div class="loading" id="loading">Authenticating...</div>
         <div class="error" id="error-msg">Invalid login details</div>
         <div class="success" id="success-msg">Access Granted!</div>
+
+ 
+        <div id="googleSignIn"></div>
+        <div id="result"></div>
     </form>
 </div>
 
@@ -171,7 +176,6 @@ function validateLogin() {
 
     error.style.display = "none";
     success.style.display = "none";
-
     loading.style.display = "block";
     btn.disabled = true;
 
@@ -181,11 +185,7 @@ function validateLogin() {
 
         if (user === "admin" && pass === "1234") {
             success.style.display = "block";
-
-            setTimeout(() => {
-                alert("Welcome to AquaPure Dashboard!");
-            }, 800);
-
+            setTimeout(() => alert("Welcome to AquaPure Dashboard!"), 800);
         } else {
             error.style.display = "block";
         }
@@ -193,6 +193,39 @@ function validateLogin() {
 
     return false;
 }
+
+// --------------------------
+// GOOGLE LOGIN CALLBACK
+// --------------------------
+function handleCredentialResponse(response) {
+    const form = document.createElement("form");
+    form.method = "POST";
+    form.action = "/google-auth";
+
+    const input = document.createElement("input");
+    input.type = "hidden";
+    input.name = "token";
+    input.value = response.credential;
+
+    form.appendChild(input);
+    document.body.appendChild(form);
+    form.submit();
+}
+
+// --------------------------
+// INITIALIZE GOOGLE BUTTON
+// --------------------------
+window.onload = function() {
+    google.accounts.id.initialize({
+        client_id: "737562037990-n21m7uc217rhihqs83r5j5hene4b2jf6.apps.googleusercontent.com",
+        callback: handleCredentialResponse
+    });
+
+    google.accounts.id.renderButton(
+        document.getElementById("googleSignIn"),
+        { theme: "outline", size: "large", width: 250 }
+    );
+};
 </script>
 
 </body>
