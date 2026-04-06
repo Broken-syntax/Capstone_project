@@ -1,115 +1,74 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Driver Input</title>
+<title>Driver</title>
 
 <style>
-body {
-    font-family: 'Segoe UI', sans-serif;
-    margin: 0;
-    background: linear-gradient(to bottom, #00c6ff, #0072ff);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
+body { font-family:'Segoe UI'; background:#eef7fb; padding:20px; }
+
+.card {
+    background:white; padding:15px; margin:10px 0;
+    border-radius:10px; box-shadow:0 3px 8px rgba(0,0,0,0.1);
 }
 
-/* CARD */
-.container {
-    background: white;
-    padding: 25px;
-    border-radius: 12px;
-    width: 320px;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-}
+.new{border-left:5px solid orange;}
+.active{border-left:5px solid #00bcd4;}
 
-h2 {
-    text-align: center;
-    color: #0072ff;
-}
-
-input {
-    width: 100%;
-    padding: 10px;
-    margin: 8px 0;
-    border-radius: 6px;
-    border: 1px solid #ccc;
-}
+input { width:100%; padding:8px; margin:5px 0; }
 
 button {
-    width: 100%;
-    padding: 12px;
-    background: #00bcd4;
-    color: white;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-}
-
-button:hover {
-    background: #0097a7;
-}
-
-/* RESULT BOX */
-.result {
-    margin-top: 15px;
-    padding: 10px;
-    background: #e0f7fa;
-    border-radius: 6px;
-    text-align: center;
-    display: none;
+background:linear-gradient(90deg,#00c6ff,#0072ff);
+color:white; padding:10px; border:none; border-radius:6px;
 }
 </style>
 </head>
 
 <body>
 
-<div class="container">
-    <h2>🚚 Driver Trip Input</h2>
+<h2>Driver Dashboard</h2>
 
-    <input type="number" id="startOdo" placeholder="Start Odometer">
-    <input type="number" id="endOdo" placeholder="End Odometer">
-    <input type="number" id="fuel" placeholder="Fuel Used (Liters)">
-    <input type="number" id="price" placeholder="Fuel Price per Liter">
+<h3>New Deliveries</h3>
+{% for x in Input_Dashboard if not x.is_accepted %}
+<div class="card new">
+<b>{{ x.Customer_Name }}</b>
+<p>{{ x.Admin_Vehicle }} | {{ x.Admin_DriverS }}</p>
+<p>Tons: {{ x.tons }}</p>
 
-    <button onclick="submitData()">Submit</button>
-
-    <div class="result" id="resultBox"></div>
+<form action="/accept_delivery/{{ x.id }}" method="POST">
+<button>Accept</button>
+</form>
 </div>
+{% endfor %}
 
-<script>
-function submitData() {
-    let start = parseFloat(document.getElementById("startOdo").value);
-    let end = parseFloat(document.getElementById("endOdo").value);
-    let fuel = parseFloat(document.getElementById("fuel").value);
-    let price = parseFloat(document.getElementById("price").value);
+<h3>Active</h3>
+{% for x in Input_Dashboard if x.is_accepted and x.status!="done" %}
+<div class="card active">
 
-    if (isNaN(start) || isNaN(end) || isNaN(fuel) || isNaN(price)) {
-        alert("Please fill all fields!");
-        return;
-    }
+<b>{{ x.Customer_Name }}</b>
 
-    if (end < start) {
-        alert("End odometer must be higher than start!");
-        return;
-    }
+<form action="/driver_update/{{ x.id }}" method="POST">
+<input name="startOdo" placeholder="Start Odo" required>
+<input name="endOdo" placeholder="End Odo" required>
+<input name="fuel" placeholder="Fuel Used" required>
+<input name="price" placeholder="Fuel Price" required>
+<button>Finish</button>
+</form>
 
-    let distance = end - start;
-    let totalCost = fuel * price;
+</div>
+{% endfor %}
 
-    let resultBox = document.getElementById("resultBox");
-    resultBox.style.display = "block";
-    resultBox.innerHTML = `
-        Distance: <b>${distance} km</b><br>
-        Fuel Cost: <b>₱${totalCost.toFixed(2)}</b>
-    `;
+<h3>History</h3>
+<table>
+<tr><th>Customer</th><th>Tons</th><th>Completed</th></tr>
 
-    // CLEAR INPUTS (optional)
-    document.querySelectorAll("input").forEach(input => input.value = "");
-}
-</script>
+{% for x in Input_Dashboard if x.status=="done" %}
+<tr>
+<td>{{ x.Customer_Name }}</td>
+<td>{{ x.tons }}</td>
+<td>{{ x.date }} {{ x.time }}</td>
+</tr>
+{% endfor %}
+</table>
 
 </body>
 </html>

@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Status</title>
+<style>
+body { font-family:'Segoe UI'; background:#eef7fb; padding:20px; }
+
+table {
+    width:100%;
+    border-collapse:collapse;
+    background:white;
+}
+
+th,td {
+    padding:10px;
+    text-align:center;
+}
+
+th {
+    background:#0072ff;
+    color:white;
+}
+
+tr:nth-child(even){
+    background:#f2f9ff;
+}
+
+.status {
+    padding:5px 10px;
+    color:white;
+    border-radius:6px;
+}
+
+.pending { background:orange; }
+.transit { background:#00bcd4; }
+.done { background:green; }
+
+/* Search box */
+#search {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+}
+</style>
+</head>
+
+<body>
+
+<h2>Delivery Status</h2>
+
+<input id="search" placeholder="Search..." onkeyup="searchTable()">
+
+<table id="table">
+<tr>
+<th>Customer</th><th>Vehicle</th><th>Driver</th>
+<th>Tons</th><th>Income</th>
+<th>Status</th><th>Date</th><th>Distance</th><th>Fuel Cost</th>
+</tr>
+
+{% for x in Input_Dashboard %}
+<tr>
+<td>{{ x.Customer_Name }}</td>
+<td>{{ x.Admin_Vehicle }}</td>
+<td>{{ x.Admin_DriverS }}</td>
+<td>{{ x.tons }}</td>
+<td>₱{{ x.income }}</td>
+<td><span class="status {{ x.status }}">{{ x.status }}</span></td>
+<td>{{ x.date }}</td>
+<td>{{ x.distance }}</td>
+<td>₱{{ x.fuel_cost }}</td>
+</tr>
+{% endfor %}
+
+</table>
+
+<br>
+<button onclick="location.href='/admin_dashboard'">Back</button>
+
+<script>
+function searchTable() {
+    let input = document.getElementById("search");
+    let filter = input.value.toLowerCase();
+    let table = document.getElementById("table");
+    let tr = table.getElementsByTagName("tr");
+
+    for (let i = 1; i < tr.length; i++) {
+        let rowText = tr[i].textContent.toLowerCase();
+
+        if (rowText.includes(filter)) {
+            tr[i].style.display = "";
+        } else {
+            tr[i].style.display = "none";
+        }
+    }
+}
+</script>
+
+</body>
+</html>

@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Water Station Dashboard</title>
+<title>Admin Dashboard</title>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
@@ -11,15 +11,19 @@
 body {
     font-family: 'Segoe UI', sans-serif;
     margin: 0;
-    background: #eef7fb;
+    background: #0f172a; /* deep dark navy */
+    color: #e5e7eb;
 }
 
 /* HEADER */
 header {
-    background: linear-gradient(90deg, #00c6ff, #0072ff);
+    background: linear-gradient(90deg, #1e293b, #0ea5e9);
     color: white;
-    padding: 15px;
+    padding: 18px;
     text-align: center;
+    font-weight: bold;
+    letter-spacing: 1px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.4);
 }
 
 /* LAYOUT */
@@ -29,78 +33,104 @@ header {
 
 /* SIDEBAR */
 .sidebar {
-    width: 230px;
-    background: #003f5c;
-    color: white;
+    width: 240px;
+    background: #020617;
+    color: #cbd5f5;
     height: 100vh;
     padding: 20px;
+    border-right: 1px solid rgba(255,255,255,0.05);
 }
 
 .sidebar h3 {
     margin-bottom: 20px;
+    color: #0ea5e9;
+    text-transform: uppercase;
+    font-size: 14px;
+    letter-spacing: 1px;
 }
 
 .sidebar p {
-    padding: 10px;
-    border-radius: 6px;
+    padding: 12px;
+    margin: 8px 0;
+    border-radius: 8px;
     cursor: pointer;
+    transition: 0.3s;
+    font-weight: 500;
 }
 
 .sidebar p:hover {
-    background: rgba(255,255,255,0.2);
+    background: #0ea5e9;
+    color: #fff;
+    transform: translateX(5px);
 }
 
 /* MAIN */
 .main {
     flex: 1;
-    padding: 20px;
+    padding: 25px;
 }
 
-/* CARD STYLE */
+/* CARD */
 .card {
-    background: white;
-    padding: 20px;
-    border-radius: 12px;
-    margin-bottom: 20px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    background: #1e293b;
+    padding: 22px;
+    border-radius: 14px;
+    margin-bottom: 22px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.5);
+    border: 1px solid rgba(255,255,255,0.05);
 }
 
-/* FORM */
+/* INPUTS */
 input {
     width: 100%;
-    padding: 10px;
-    margin: 6px 0;
-    border-radius: 6px;
-    border: 1px solid #ccc;
-}
-
-button {
-    background: #00bcd4;
-    color: white;
     padding: 12px;
+    margin: 8px 0;
+    border-radius: 8px;
     border: none;
-    width: 100%;
-    border-radius: 6px;
-    cursor: pointer;
+    background: #0f172a;
+    color: white;
+    outline: none;
+    border: 1px solid #334155;
     transition: 0.3s;
 }
 
+input:focus {
+    border-color: #0ea5e9;
+}
+
+/* BUTTON */
+button {
+    background: linear-gradient(90deg, #0ea5e9, #2563eb);
+    color: white;
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: 0.3s;
+    letter-spacing: 0.5px;
+}
+
 button:hover {
-    background: #0097a7;
+    background: linear-gradient(90deg, #2563eb, #0ea5e9);
+    transform: scale(1.03);
 }
 
 /* TABLE */
 table {
     width: 100%;
     border-collapse: collapse;
-    background: white;
-    border-radius: 10px;
+    background: #1e293b;
+    border-radius: 12px;
     overflow: hidden;
 }
 
 th {
-    background: #0072ff;
+    background: #0ea5e9;
     color: white;
+    text-transform: uppercase;
+    font-size: 13px;
+    letter-spacing: 1px;
 }
 
 th, td {
@@ -108,246 +138,140 @@ th, td {
     text-align: center;
 }
 
+tr {
+    transition: 0.2s;
+}
+
 tr:nth-child(even) {
-    background: #f2f9ff;
+    background: #0f172a;
 }
 
 tr:hover {
-    background: #d9f1ff;
-}
-
-/* CHART */
-.chart-container {
-    background: white;
-    padding: 20px;
-    border-radius: 12px;
+    background: #334155;
 }
 
 /* MODAL */
 .modal {
     display: none;
     position: fixed;
-    z-index: 999;
-    left: 0;
-    top: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0,0,0,0.5);
+    background: rgba(0,0,0,0.8);
 }
 
 .modal-content {
-    background: white;
-    margin: 8% auto;
-    padding: 20px;
-    width: 80%;
-    max-width: 600px;
-    border-radius: 12px;
-    animation: fadeIn 0.3s ease;
+    background: #1e293b;
+    margin: 5% auto;
+    padding: 25px;
+    width: 90%;
+    max-width: 900px;
+    border-radius: 14px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.6);
 }
 
 .close {
     float: right;
-    font-size: 22px;
+    font-size: 24px;
     cursor: pointer;
-    color: red;
-}
-
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(-20px); }
-    to { opacity: 1; transform: translateY(0); }
+    color: #ef4444;
 }
 </style>
 </head>
 
 <body>
 
-<header>
-    <h2>💧 AquaPure Water Station Dashboard</h2>
-</header>
+<header><h2>💧 Water Supply Dashboard</h2></header>
 
 <div class="container">
 
-    <!-- SIDEBAR -->
-    <div class="sidebar">
-        <h3>Menu</h3>
-        <p>🏠 Dashboard</p>
-<p onclick="openModal('assignmentModal')">🚚 Status</p>
-<p onclick="openModal('historyModal')">📜 History</p>
-    </div>
+<div class="sidebar">
+    <h3>Menu</h3>
+    <p onclick="location.href='/admin_dashboard'">🏠 Dashboard</p>
+    <p onclick="location.href='/admin_status'">🚚 Delivery Status</p>
+    <p onclick="openModal()">📜 History</p>
+</div>
 
-    <!-- MAIN -->
-    <div class="main">
+<div class="main">
 
-        <!-- FORM -->
-        <div class="card">
-            <h3>🚚 Assign Delivery Vehicle</h3>
-<form action="/admin_dashboard" method="POST">
-            <input type="text" name="CustomerName" id="name" placeholder="Customer Name">
-            <input type="text"  name="Vehicle" id="vehicle" placeholder="Vehicle">
-            <input type="text" name="Driver" id="driver" placeholder="Driver">
-           
-            <button type="submit" >Submit</button>
-
+<div class="card">
+<h3>🚚 Assign Delivery</h3>
+<form method="POST">
+<input name="CustomerName" placeholder="Customer Name" required>
+<input name="Vehicle" placeholder="Vehicle" required>
+<input name="Driver" placeholder="Driver" required>
+<input type="number" name="tons" placeholder="Tons" required>
+<input type="number" name="price" placeholder="Price per Ton" required>
+<button>Submit</button>
 </form>
-        </div>
-
-        <!-- TABLE -->
-        <div class="card">
-            <h3>📊 Delivery Records</h3>
-
-            <table id="dataTable">
-                <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>Vehicle</th>
-                        <th>Driver</th>
-
-                    </tr>
-                </thead>
-                <tbody>
-    {% for assign in Input_Dashboard %}
-        <tr>
-            <td>{{ assign.Customer_Name }}</td>
-            <td>{{ assign.Admin_Vehicle }}</td>
-            <td>{{ assign.Admin_DriverS }}</td>
-        </tr>
-    {% endfor %}
-</tbody>
-            </table>
-        </div>
-
-        <!-- CHART -->
-        <div class="chart-container">
-            <h3>⛽ Fuel Cost Overview</h3>
-            <canvas id="myChart"></canvas>
-        </div>
-
-    </div>
 </div>
 
-
-<!-- ASSIGNMENT MODAL -->
-<div id="assignmentModal" class="modal">
-    <div class="modal-content">
-        <span class="close" onclick="closeModal('assignmentModal')">&times;</span>
-        <h3>🚚 Assign Delivery Vehicle</h3>
-
-        <form action="/admin_dashboard" method="POST">
-            <input type="text" name="CustomerName" placeholder="Customer Name">
-            <input type="text" name="Vehicle" placeholder="Vehicle">
-            <input type="text" name="Driver" placeholder="Driver">
-            <button type="submit">Submit</button>
-        </form>
-    </div>
+<div class="card">
+<h3>💰 Income</h3>
+<p>Daily: ₱{{ daily }}</p>
+<p>Weekly: ₱{{ weekly }}</p>
+<p>Monthly: ₱{{ monthly }}</p>
 </div>
 
-
-<!-- HISTORY MODAL -->
-<div id="historyModal" class="modal">
-    <div class="modal-content">
-        <span class="close" onclick="closeModal('historyModal')">&times;</span>
-        <h3>📜 History</h3>
-
-        <table>
-            <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Vehicle</th>
-                    <th>Driver</th>
-                    <th>DATE</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for assign in Input_Dashboard %}
-                <tr>
-                    <td>{{ assign.Customer_Name }}</td>
-                    <td>{{ assign.Admin_Vehicle }}</td>
-                    <td>{{ assign.Admin_DriverS }}</td>
-                    <td>{{ assign.created_at }}</td>
-                    
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
+<div class="card">
+<h3>⛽ Fuel Cost</h3>
+<canvas id="chart"></canvas>
 </div>
+
+</div>
+</div>
+
+<!-- HISTORY -->
+<div id="modal" class="modal">
+<div class="modal-content">
+<span class="close" onclick="closeModal()">&times;</span>
+
+<h3>📜 History</h3>
+
+<input id="search" placeholder="Search..." onkeyup="search()">
+
+<table id="table">
+<tr>
+<th>Customer</th><th>Tons</th><th>Income</th><th>Profit</th><th>Action</th>
+</tr>
+
+{% for h in history %}
+<tr>
+<td>{{ h.get('Customer', 'N/A') }}</td>
+<td>{{ h.get('tons', 0) }}</td>
+<td>₱{{ h.get('income', 0) }}</td>
+<td>₱{{ h.get('profit', 0) }}</td>
+<td>
+    <a href="/delete/{{ h.id }}">
+        <button style="background:red;">Delete</button>
+    </a>
+</td>
+</tr>
+{% else %}
+<tr>
+<td colspan="5" style="padding:20px; text-align:center;">
+⚠️ No completed deliveries yet
+</td>
+</tr>
+{% endfor %}
 
 <script>
-let labels = [];
-let fuelCosts = [];
+function openModal(){ document.getElementById("modal").style.display="block"; }
+function closeModal(){ document.getElementById("modal").style.display="none"; }
 
-const ctx = document.getElementById('myChart').getContext('2d');
-
-const myChart = new Chart(ctx, {
-    type: 'bar',
-    data: {
-        labels: labels,
-        datasets: [{
-            label: 'Fuel Cost (₱)',
-            data: fuelCosts,
-            backgroundColor: '#00bcd4'
-        }]
-    },
-    options: {
-        responsive: true,
-        plugins: {
-            legend: { display: false }
-        }
-    }
+function search(){
+let val=document.getElementById("search").value.toLowerCase();
+document.querySelectorAll("#table tr").forEach((r,i)=>{
+if(i===0)return;
+r.style.display=r.cells[0].innerText.toLowerCase().includes(val)?"":"none";
 });
-
-function addData() {
-    let name = document.getElementById("name").value;
-    let vehicle = document.getElementById("vehicle").value;
-    let driver = document.getElementById("driver").value;
-    let start = parseFloat(document.getElementById("startOdo").value);
-    let end = parseFloat(document.getElementById("endOdo").value);
-    let fuel = parseFloat(document.getElementById("fuel").value);
-    let price = parseFloat(document.getElementById("price").value);
-
-    if (!name || !vehicle || !driver || isNaN(start) || isNaN(end)) {
-        alert("Please fill all fields correctly!");
-        return;
-    }
-
-    let distance = end - start;
-    let totalCost = fuel * price;
-
-    let table = document.getElementById("dataTable").getElementsByTagName('tbody')[0];
-    let row = table.insertRow();
-
-    row.insertCell(0).innerHTML = name;
-    row.insertCell(1).innerHTML = vehicle;
-    row.insertCell(2).innerHTML = driver;
-    row.insertCell(3).innerHTML = distance + " km";
-    row.insertCell(4).innerHTML = "₱" + totalCost.toFixed(2);
-
-    labels.push(name);
-    fuelCosts.push(totalCost);
-    myChart.update();
-
-    document.querySelectorAll("input").forEach(input => input.value = "");
-}
-</script>
-
-<script>
-function openModal(id) {
-    document.getElementById(id).style.display = "block";
 }
 
-function closeModal(id) {
-    document.getElementById(id).style.display = "none";
-}
 
-// Close modal when clicking outside
-window.onclick = function(event) {
-    let modals = document.querySelectorAll('.modal');
-    modals.forEach(modal => {
-        if (event.target === modal) {
-            modal.style.display = "none";
-        }
-    });
-}
+
+new Chart(document.getElementById("chart"),{
+type:"bar",
+data:{labels:labels,datasets:[{label:"Fuel Cost",data:data}]}
+});
 </script>
 
 </body>
