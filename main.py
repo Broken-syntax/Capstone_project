@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 from flask import Flask, render_template, request, redirect, url_for, session
 import firebase_admin
 from firebase_admin import credentials, firestore
@@ -29,12 +30,17 @@ def login_required(f):
         return f(*args, **kwargs)
     wrapper.__name__ = f.__name__
     return wrapper
+=======
+from flask import Flask, render_template, request, redirect, url_for, flash, session
+>>>>>>> Stashed changes
 
+app = Flask(__name__)
 
 @app.route("/")
 def index():
     return render_template("admin_log_in.html")
 
+<<<<<<< Updated upstream
 
 # ================= GOOGLE AUTH =================
 @app.route("/google-auth", methods=["POST"])
@@ -229,5 +235,15 @@ def safe_float(value):
 
 
 # ================= RUN =================
+=======
+@app.route("/admin_dashboard")
+def Admin_Dashboard():
+    return render_template("admin_dashboard.html")
+
+@app.route("/driver_side")
+def Driver_Side():
+    return render_template("driver_side.html")
+
+>>>>>>> Stashed changes
 if __name__ == "__main__":
     app.run(debug=True)
