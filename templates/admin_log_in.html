@@ -8,191 +8,212 @@
 <title>Water Station Admin</title>
 
 <style>
+
+/* 🌌 BACKGROUND */
 body {
     margin: 0;
     font-family: 'Segoe UI', sans-serif;
     height: 100vh;
-    background: linear-gradient(to bottom, #00c6ff, #0072ff);
     overflow: hidden;
+    background: linear-gradient(135deg, #0f172a, #1e3a8a, #3b82f6);
 }
 
-/* 🌊 Floating bubbles */
+/* ✨ ANIMATED GRADIENT OVERLAY */
+body::before {
+    content: "";
+    position: absolute;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(59,130,246,0.2), transparent 70%);
+    animation: moveBg 20s linear infinite;
+    z-index: 0;
+}
+
+@keyframes moveBg {
+    0% { transform: translate(0,0); }
+    50% { transform: translate(-25%, -25%); }
+    100% { transform: translate(0,0); }
+}
+
+/* 🌊 ADVANCED BUBBLES */
 .bubble {
     position: absolute;
-    bottom: -100px;
-    background: rgba(255,255,255,0.2);
+    bottom: -120px;
     border-radius: 50%;
-    animation: rise 10s infinite ease-in;
+    background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.9), rgba(59,130,246,0.3));
+    box-shadow: 0 0 15px rgba(147,197,253,0.6);
+    animation: rise linear infinite;
+    pointer-events: none;
+    z-index: 1;
 }
 
 @keyframes rise {
-    0% { transform: translateY(0); opacity: 0; }
-    50% { opacity: 1; }
-    100% { transform: translateY(-1000px); opacity: 0; }
+    0% {
+        transform: translateY(0) translateX(0) scale(1);
+        opacity: 0;
+    }
+    20% { opacity: 1; }
+    100% {
+        transform: translateY(-120vh) translateX(40px) scale(1.2);
+        opacity: 0;
+    }
 }
 
-/* 💎 Glass card */
+/* 💎 GLASS CARD */
 .login-container {
     position: relative;
     z-index: 2;
-    width: 340px;
-    padding: 30px;
-    border-radius: 15px;
-    backdrop-filter: blur(15px);
-    background: rgba(255,255,255,0.15);
-    box-shadow: 0 8px 32px rgba(0,0,0,0.2);
-    color: white;
+    width: 360px;
+    padding: 35px;
+    border-radius: 20px;
+    backdrop-filter: blur(20px);
+    background: rgba(255,255,255,0.12);
+    box-shadow: 0 15px 50px rgba(0,0,0,0.4);
+    color: #1e293b;
     text-align: center;
+
     margin: auto;
     top: 50%;
-    transform: translateY(-50%);
-    animation: fadeIn 0.7s ease;
+    transform: translateY(-50%) scale(0.9);
+
+    animation: popIn 1s ease forwards;
 }
 
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(-50%); }
+@keyframes popIn {
+    to {
+        transform: translateY(-50%) scale(1);
+    }
 }
 
+/* TITLE */
 h2 {
-    margin-bottom: 10px;
+    color: #ffffff;
+    margin-bottom: 5px;
 }
 
 .subtitle {
     font-size: 14px;
     margin-bottom: 20px;
-    opacity: 0.8;
+    color: #cbd5e1;
 }
 
+/* INPUT */
 input {
     width: 100%;
     padding: 12px;
     margin: 10px 0;
     border: none;
-    border-radius: 8px;
+    border-radius: 10px;
     outline: none;
+    background: rgba(255,255,255,0.9);
 }
 
-.password-container {
-    position: relative;
-}
-
-.toggle-password {
-    position: absolute;
-    right: 10px;
-    top: 50%;
-    transform: translateY(-50%);
-    cursor: pointer;
-    color: #333;
-}
-
+/* BUTTON */
 button {
-    display: block;
-    width: 250px;          
-    margin: 15px auto;     
+    width: 250px;
+    margin: 15px auto;
     padding: 12px;
     border: none;
-    border-radius: 8px;
-    background: #00e5ff;
-    color: #003366;
+    border-radius: 10px;
+    background: linear-gradient(90deg, #1e3a8a, #3b82f6);
+    color: white;
     font-size: 16px;
     cursor: pointer;
     transition: 0.3s;
 }
 
 button:hover {
-    background: #00bcd4;
+    transform: scale(1.05);
+    background: #93c5fd;
+    color: #1e293b;
 }
 
-.error {
-    color: #ffdddd;
+/* LOADING SPINNER */
+.spinner {
+    width: 20px;
+    height: 20px;
+    border: 3px solid #ccc;
+    border-top: 3px solid #1e3a8a;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: 10px auto;
     display: none;
-    margin-top: 10px;
+}
+
+@keyframes spin {
+    100% { transform: rotate(360deg); }
+}
+
+/* MESSAGES */
+.error {
+    color: #f87171;
+    display: none;
 }
 
 .success {
-    color: #d4ffd4;
+    color: #4ade80;
     display: none;
-    margin-top: 10px;
 }
 
-.loading {
-    display: none;
-    margin-top: 10px;
-}
-#googleSignIn {
-    display: flex;
-    justify-content: center;
-    margin-top: 10px;
-}
+/* GOOGLE BUTTON */
+#googleSignIn { display: flex; justify-content: center; margin-top: 10px; }
+
 </style>
 </head>
 
 <body>
 
-<!-- bubbles -->
+<!-- 🌊 BUBBLES -->
 <script>
-for (let i = 0; i < 15; i++) {
-    let bubble = document.createElement("div");
-    bubble.classList.add("bubble");
-    bubble.style.width = bubble.style.height = Math.random() * 40 + 10 + "px";
-    bubble.style.left = Math.random() * 100 + "%";
-    bubble.style.animationDuration = (Math.random() * 5 + 5) + "s";
-    document.body.appendChild(bubble);
+function createBubbles() {
+    for (let i = 0; i < 30; i++) {
+        let bubble = document.createElement("div");
+        bubble.classList.add("bubble");
+
+        let size = Math.random() * 60 + 10;
+
+        bubble.style.width = size + "px";
+        bubble.style.height = size + "px";
+        bubble.style.left = Math.random() * 100 + "%";
+
+        bubble.style.animationDuration = (Math.random() * 6 + 4) + "s";
+        bubble.style.animationDelay = Math.random() * 5 + "s";
+
+        document.body.appendChild(bubble);
+    }
 }
+
+window.addEventListener("load", function() {
+    createBubbles();
+
+    google.accounts.id.initialize({
+        client_id: "YOUR_GOOGLE_CLIENT_ID",
+        callback: handleCredentialResponse
+    });
+
+    google.accounts.id.renderButton(
+        document.getElementById("googleSignIn"),
+        { theme: "outline", size: "large", width: 250 }
+    );
+});
 </script>
 
+<!-- LOGIN CARD -->
 <div class="login-container">
-    <h2>💧 AquaPure Station</h2>
-    <div class="subtitle">Admin Login Portal</div>
 
-    <form onsubmit="return validateLogin()">
+    <h2>💧 RPV Water Delivery</h2>
+    <div class="subtitle">Secure Admin Access</div>
 
+    <div id="googleSignIn"></div>
 
+    <div class="spinner" id="loading"></div>
 
-        <div class="loading" id="loading">Authenticating...</div>
-        <div class="error" id="error-msg">Invalid login details</div>
-        <div class="success" id="success-msg">Access Granted!</div>
+    <div class="error" id="error">Invalid login</div>
+    <div class="success" id="success">Access granted!</div>
 
- 
-        <div id="googleSignIn"></div>
-        <div id="result"></div>
-    </form>
 </div>
 
 <script>
-function togglePassword() {
-    const pass = document.getElementById("password");
-    pass.type = pass.type === "password" ? "text" : "password";
-}
-
-function validateLogin() {
-    const user = document.getElementById("username").value;
-    const pass = document.getElementById("password").value;
-    const error = document.getElementById("error-msg");
-    const success = document.getElementById("success-msg");
-    const loading = document.getElementById("loading");
-    const btn = document.getElementById("login-btn");
-
-    error.style.display = "none";
-    success.style.display = "none";
-    loading.style.display = "block";
-    btn.disabled = true;
-
-    setTimeout(() => {
-        loading.style.display = "none";
-        btn.disabled = false;
-
-        if (user === "admin" && pass === "1234") {
-            success.style.display = "block";
-            setTimeout(() => alert("Welcome to AquaPure Dashboard!"), 800);
-        } else {
-            error.style.display = "block";
-        }
-    }, 1500);
-
-    return false;
-}
 
 // --------------------------
 // GOOGLE LOGIN CALLBACK

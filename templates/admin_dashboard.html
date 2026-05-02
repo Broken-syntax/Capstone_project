@@ -3,275 +3,330 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Admin Dashboard</title>
+<title>Admin Dashboard | RPV Water Delivery</title>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <style>
+/* 🌌 GLOBAL THEME - Matched to Login Screen */
 body {
-    font-family: 'Segoe UI', sans-serif;
+    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
     margin: 0;
-    background: #0f172a; /* deep dark navy */
-    color: #e5e7eb;
+    background: linear-gradient(135deg, #0f172a, #1e3a8a, #3b82f6);
+    background-attachment: fixed;
+    color: #ffffff;
+    min-height: 100vh;
+    overflow-x: hidden;
+}
+
+/* 🌊 BUBBLES ANIMATION */
+.bubble {
+    position: absolute;
+    bottom: -150px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.4), rgba(255,255,255,0.1));
+    filter: blur(2px);
+    animation: rise linear infinite;
+    pointer-events: none;
+    z-index: 0;
+}
+
+@keyframes rise {
+    0% { transform: translateY(0) scale(1); opacity: 0; }
+    20% { opacity: 0.5; }
+    100% { transform: translateY(-120vh) scale(1.3); opacity: 0; }
 }
 
 /* HEADER */
 header {
-    background: linear-gradient(90deg, #1e293b, #0ea5e9);
-    color: white;
-    padding: 18px;
-    text-align: center;
-    font-weight: bold;
-    letter-spacing: 1px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(15px);
+    padding: 15px 25px;
+    font-size: 1.4rem;
+    font-weight: 600;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 100;
 }
 
 /* LAYOUT */
 .container {
     display: flex;
+    position: relative;
+    z-index: 2;
 }
 
-/* SIDEBAR */
+/* SIDEBAR - Translucent Glass */
 .sidebar {
     width: 240px;
-    background: #020617;
-    color: #cbd5f5;
-    height: 100vh;
-    padding: 20px;
-    border-right: 1px solid rgba(255,255,255,0.05);
-}
-
-.sidebar h3 {
-    margin-bottom: 20px;
-    color: #0ea5e9;
-    text-transform: uppercase;
-    font-size: 14px;
-    letter-spacing: 1px;
+    background: rgba(15, 23, 42, 0.4);
+    backdrop-filter: blur(10px);
+    height: calc(100vh - 60px);
+    padding: 30px 15px;
+    border-right: 1px solid rgba(255,255,255,0.1);
+    position: sticky;
+    top: 60px;
 }
 
 .sidebar p {
-    padding: 12px;
-    margin: 8px 0;
-    border-radius: 8px;
+    padding: 14px 18px;
     cursor: pointer;
-    transition: 0.3s;
+    border-radius: 12px;
+    margin-bottom: 10px;
+    transition: all 0.3s ease;
     font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 10px;
 }
 
 .sidebar p:hover {
-    background: #0ea5e9;
-    color: #fff;
+    background: rgba(59, 130, 246, 0.3);
     transform: translateX(5px);
 }
 
-/* MAIN */
+/* MAIN CONTENT */
 .main {
     flex: 1;
-    padding: 25px;
+    padding: 30px;
+    max-width: 1200px;
 }
 
-/* CARD */
+/* GLASS CARDS */
 .card {
-    background: #1e293b;
-    padding: 22px;
-    border-radius: 14px;
-    margin-bottom: 22px;
-    box-shadow: 0 8px 20px rgba(0,0,0,0.5);
-    border: 1px solid rgba(255,255,255,0.05);
+    background: rgba(255, 255, 255, 0.12);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    padding: 25px;
+    border-radius: 20px;
+    margin-bottom: 25px;
+    border: 1px solid rgba(255,255,255,0.1);
+    box-shadow: 0 15px 35px rgba(0,0,0,0.2);
 }
 
-/* INPUTS */
+h3 { margin-top: 0; font-weight: 600; color: #93c5fd; }
+
+/* INPUT & FORMS */
 input {
-    width: 100%;
+    width: calc(100% - 24px);
     padding: 12px;
     margin: 8px 0;
-    border-radius: 8px;
-    border: none;
-    background: #0f172a;
-    color: white;
-    outline: none;
-    border: 1px solid #334155;
-    transition: 0.3s;
+    border-radius: 10px;
+    border: 1px solid rgba(255,255,255,0.2);
+    background: rgba(255,255,255,0.9);
+    color: #0f172a;
+    font-size: 1rem;
 }
 
-input:focus {
-    border-color: #0ea5e9;
-}
-
-/* BUTTON */
 button {
-    background: linear-gradient(90deg, #0ea5e9, #2563eb);
+    background: #3b82f6;
     color: white;
-    padding: 12px;
     border: none;
-    border-radius: 8px;
+    padding: 12px 25px;
+    border-radius: 10px;
+    font-weight: 600;
     cursor: pointer;
-    font-weight: bold;
     transition: 0.3s;
-    letter-spacing: 0.5px;
+    width: 100%;
+    margin-top: 10px;
 }
 
 button:hover {
-    background: linear-gradient(90deg, #2563eb, #0ea5e9);
-    transform: scale(1.03);
+    background: #60a5fa;
+    box-shadow: 0 0 15px rgba(59, 130, 246, 0.5);
 }
 
-/* TABLE */
-table {
-    width: 100%;
-    border-collapse: collapse;
-    background: #1e293b;
+/* INCOME SUMMARY STATS */
+.income-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.stat-box {
+    background: rgba(255,255,255,0.05);
+    padding: 15px;
     border-radius: 12px;
-    overflow: hidden;
-}
-
-th {
-    background: #0ea5e9;
-    color: white;
-    text-transform: uppercase;
-    font-size: 13px;
-    letter-spacing: 1px;
-}
-
-th, td {
-    padding: 12px;
     text-align: center;
 }
 
-tr {
-    transition: 0.2s;
-}
+.stat-box span { font-size: 1.2rem; font-weight: 700; color: #10b981; }
 
-tr:nth-child(even) {
-    background: #0f172a;
-}
+/* TABLE */
+table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+th, td { padding: 14px; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.1); }
+th { color: #93c5fd; font-weight: 600; text-transform: uppercase; font-size: 0.8rem; }
 
-tr:hover {
-    background: #334155;
-}
-
-/* MODAL */
+/* MODALS */
 .modal {
     display: none;
     position: fixed;
-    width: 100%;
-    height: 100%;
-    background: rgba(0,0,0,0.8);
+    z-index: 1000;
+    left: 0; top: 0;
+    width: 100%; height: 100%;
+    background: rgba(0,0,0,0.7);
+    backdrop-filter: blur(8px);
 }
 
 .modal-content {
     background: #1e293b;
     margin: 5% auto;
-    padding: 25px;
-    width: 90%;
+    padding: 30px;
+    width: 85%;
     max-width: 900px;
-    border-radius: 14px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+    border-radius: 24px;
+    border: 1px solid rgba(255,255,255,0.1);
+    color: white;
 }
 
-.close {
-    float: right;
-    font-size: 24px;
-    cursor: pointer;
-    color: #ef4444;
-}
+.close { float: right; cursor: pointer; color: #ef4444; font-size: 28px; }
+
 </style>
 </head>
 
 <body>
 
-<header><h2>💧 Water Supply Dashboard</h2></header>
-
-<div class="container">
-
-<div class="sidebar">
-    <h3>Menu</h3>
-    <p onclick="location.href='/admin_dashboard'">🏠 Dashboard</p>
-    <p onclick="location.href='/admin_status'">🚚 Delivery Status</p>
-    <p onclick="openModal()">📜 History</p>
-</div>
-
-<div class="main">
-
-<div class="card">
-<h3>🚚 Assign Delivery</h3>
-<form method="POST">
-<input name="CustomerName" placeholder="Customer Name" required>
-<input name="Vehicle" placeholder="Vehicle" required>
-<input name="Driver" placeholder="Driver" required>
-<input type="number" name="tons" placeholder="Tons" required>
-<input type="number" name="price" placeholder="Price per Ton" required>
-<button>Submit</button>
-</form>
-</div>
-
-<div class="card">
-<h3>💰 Income</h3>
-<p>Daily: ₱{{ daily }}</p>
-<p>Weekly: ₱{{ weekly }}</p>
-<p>Monthly: ₱{{ monthly }}</p>
-</div>
-
-<div class="card">
-<h3>⛽ Fuel Cost</h3>
-<canvas id="chart"></canvas>
-</div>
-
-</div>
-</div>
-
-<!-- HISTORY -->
-<div id="modal" class="modal">
-<div class="modal-content">
-<span class="close" onclick="closeModal()">&times;</span>
-
-<h3>📜 History</h3>
-
-<input id="search" placeholder="Search..." onkeyup="search()">
-
-<table id="table">
-<tr>
-<th>Customer</th><th>Tons</th><th>Income</th><th>Profit</th><th>Action</th>
-</tr>
-
-{% for h in history %}
-<tr>
-<td>{{ h.get('Customer', 'N/A') }}</td>
-<td>{{ h.get('tons', 0) }}</td>
-<td>₱{{ h.get('income', 0) }}</td>
-<td>₱{{ h.get('profit', 0) }}</td>
-<td>
-    <a href="/delete/{{ h.id }}">
-        <button style="background:red;">Delete</button>
-    </a>
-</td>
-</tr>
-{% else %}
-<tr>
-<td colspan="5" style="padding:20px; text-align:center;">
-⚠️ No completed deliveries yet
-</td>
-</tr>
-{% endfor %}
+<header>
+    <span>💧 RPV Water Delivery</span>
+    <small style="opacity: 0.7;">Admin Dashboard</small>
+</header>
 
 <script>
-function openModal(){ document.getElementById("modal").style.display="block"; }
-function closeModal(){ document.getElementById("modal").style.display="none"; }
+/* BUBBLE GENERATOR */
+function createBubbles() {
+    for (let i = 0; i < 20; i++) {
+        let bubble = document.createElement("div");
+        bubble.classList.add("bubble");
+        let size = Math.random() * 60 + 20;
+        bubble.style.width = size + "px";
+        bubble.style.height = size + "px";
+        bubble.style.left = Math.random() * 100 + "%";
+        bubble.style.animationDuration = (Math.random() * 8 + 5) + "s";
+        bubble.style.animationDelay = Math.random() * 5 + "s";
+        document.body.appendChild(bubble);
+    }
+}
+window.addEventListener("load", createBubbles);
+</script>
 
+<div class="container">
+    <div class="sidebar">
+        <p onclick="location.href='/admin_dashboard'">🏠 Dashboard</p>
+        <p onclick="openDriverModal()">👤 Add Driver</p>
+        <p onclick="location.href='/admin_status'">🚚 Delivery Status</p>
+        <p onclick="openModal()">📜 History</p>
+        <p onclick="location.href='/logout'" style="color: #fda4af;">🚪 Logout</p>
+    </div>
+
+    <div class="main">
+        <div style="display: grid; grid-template-columns: 1fr 1.5fr; gap: 25px;">
+            
+            <div class="card">
+                <h3>🚚 Assign Delivery</h3>
+                <form method="POST">
+                    <input name="CustomerName" placeholder="Customer Name" required>
+                    <input name="location" placeholder="Delivery Address" required>
+                    <div style="display: flex; gap: 10px;">
+                        <input type="number" name="tons" placeholder="Tons" required>
+                        <input type="number" name="price" placeholder="Price/Ton" required>
+                    </div>
+                    <button type="submit">Submit Assignment</button>
+                </form>
+            </div>
+
+            <div class="card">
+                <h3>💰 Income Summary</h3>
+                <div class="income-grid">
+                    <div class="stat-box"><small>Daily</small><br><span>₱{{ daily }}</span></div>
+                    <div class="stat-box"><small>Weekly</small><br><span>₱{{ weekly }}</span></div>
+                    <div class="stat-box"><small>Monthly</small><br><span>₱{{ monthly }}</span></div>
+                </div>
+                <div style="padding: 15px; background: rgba(16, 185, 129, 0.1); border-radius: 12px; border: 1px solid rgba(16, 185, 129, 0.3);">
+                    <p style="margin: 0;"><strong>Net Profit:</strong> ₱{{ total_income - total_fuel }}</p>
+                    <small style="opacity: 0.7;">(Total Income: ₱{{ total_income }} - Fuel: ₱{{ total_fuel }})</small>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>📊 Analytics</h3>
+            <div style="position: relative; height: 300px;">
+                <canvas id="analyticsChart"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="modal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <h3>📜 Delivery History</h3>
+        <input id="search" placeholder="Search by name or location..." onkeyup="search()">
+        <table>
+            <thead>
+                <tr>
+                    <th>Customer</th>
+                    <th>Location</th>
+                    <th>Date</th>
+                    <th>Income</th>
+                    <th>Profit</th>
+                </tr>
+            </thead>
+            <tbody id="table">
+                {% for h in history %}
+                <tr>
+                    <td>{{ h.get('Customer_Name', 'N/A') }}</td>
+                    <td>{{ h.get('location', '-') }}</td>
+                    <td>{{ h.get('date_assigned', '-') }}</td>
+                    <td>₱{{ h.get('income', 0) }}</td>
+                    <td style="color: #10b981; font-weight: bold;">₱{{ h.get('profit', 0) }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div id="driverModal" class="modal">
+    <div class="modal-content" style="max-width: 400px;">
+        <span class="close" onclick="closeDriverModal()">&times;</span>
+        <h3>👤 Add New Driver</h3>
+        <form method="POST" action="/add_driver">
+            <input name="name" placeholder="Full Name" required>
+            <input name="address" placeholder="Residential Address" required>
+            <input name="contact" placeholder="Contact Number" required>
+            <button type="submit">Register Driver</button>
+        </form>
+    </div>
+</div>
+
+<script>
+/* Modal Logic */
+function openModal(){ document.getElementById("modal").style.display = "block"; }
+function closeModal(){ document.getElementById("modal").style.display = "none"; }
+function openDriverModal(){ document.getElementById("driverModal").style.display = "block"; }
+function closeDriverModal(){ document.getElementById("driverModal").style.display = "none"; }
+
+/* Search Logic */
 function search(){
-let val=document.getElementById("search").value.toLowerCase();
-document.querySelectorAll("#table tr").forEach((r,i)=>{
-if(i===0)return;
-r.style.display=r.cells[0].innerText.toLowerCase().includes(val)?"":"none";
-});
+    let val = document.getElementById("search").value.toLowerCase();
+    let rows = document.querySelectorAll("#table tr");
+    rows.forEach(row => {
+        row.style.display = row.innerText.toLowerCase().includes(val) ? "" : "none";
+    });
 }
 
-
-
-new Chart(document.getElementById("chart"),{
-type:"bar",
-data:{labels:labels,datasets:[{label:"Fuel Cost",data:data}]}
-});
+/* Background Click Close */
+window.onclick = function(event) {
+    if (event.target.className === 'modal') {
+        event.target.style.display = "none";
+    }
+}
 </script>
 
 </body>
